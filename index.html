@@ -3,107 +3,244 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEDSEEK - AI Medical & Health Advisor</title>
+    <title>MEDSEEK - AI Medical Advisor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #4a6fa5;
-            --secondary-color: #166088;
-            --text-color: #333;
-            --bg-color: #f5f7fa;
-            --user-bubble: #e3f2fd;
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --secondary: #7c3aed;
+            --danger: #dc2626;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --user-bubble: #dbeafe;
             --ai-bubble: #ffffff;
-            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .dark-mode {
-            --primary-color: #5d8bf4;
-            --secondary-color: #3d5a80;
-            --text-color: #e0e0e0;
-            --bg-color: #121212;
-            --user-bubble: #1e3a8a;
-            --ai-bubble: #1f2937;
-            --shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            --sidebar-width: 300px;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
+            background-color: #f1f5f9;
+            color: var(--dark);
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            min-height: 100vh;
+        .app-container {
             display: flex;
-            flex-direction: column;
+            min-height: 100vh;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 20px;
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+            transition: transform 0.3s ease;
         }
 
-        header h1 {
-            color: var(--primary-color);
-            font-size: 2.5rem;
-            margin-bottom: 5px;
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
         }
 
-        header p {
-            color: var(--secondary-color);
-            font-size: 1.1rem;
-            margin-bottom: 15px;
+        .sidebar-header img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
         }
 
-        .mode-toggle {
-            background: var(--primary-color);
+        .sidebar-header h2 {
+            font-size: 1.3rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .new-chat-btn {
+            background: var(--primary);
             color: white;
             border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
+            padding: 12px;
+            width: 100%;
+            border-radius: 8px;
+            font-weight: 500;
             cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-size: 0.95rem;
         }
 
-        .mode-toggle:hover {
-            opacity: 0.9;
-            transform: scale(1.05);
+        .new-chat-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .new-chat-btn i {
+            margin-right: 8px;
+        }
+
+        .chat-history {
+            margin-top: 20px;
+        }
+
+        .chat-history h3 {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .chat-list {
+            list-style: none;
+        }
+
+        .chat-item {
+            padding: 10px 12px;
+            border-radius: 6px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            position: relative;
+        }
+
+        .chat-item:hover {
+            background: #f1f5f9;
+        }
+
+        .chat-item.active {
+            background: #eff6ff;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .chat-item-content {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-item i {
+            margin-right: 8px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .delete-chat-btn {
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            padding: 5px;
+            margin-left: 5px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .chat-item:hover .delete-chat-btn {
+            opacity: 1;
+        }
+
+        .delete-chat-btn:hover {
+            color: var(--danger);
+        }
+
+        .made-with-love {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--gray);
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .made-with-love a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         .chat-container {
             flex: 1;
             display: flex;
             flex-direction: column;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            background-color: var(--ai-bubble);
+        }
+
+        .chat-header {
+            padding: 15px 25px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            z-index: 10;
+            position: sticky;
+            top: 0;
+        }
+
+        .chat-header h2 {
+            font-size: 1.2rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            margin-right: 15px;
+            color: var(--gray);
+            cursor: pointer;
         }
 
         .messages {
             flex: 1;
-            padding: 20px;
+            padding: 25px;
             overflow-y: auto;
-            max-height: 60vh;
+            background: #f9fafb;
         }
 
         .message {
-            margin-bottom: 15px;
-            padding: 12px 15px;
-            border-radius: 18px;
+            margin-bottom: 20px;
             max-width: 80%;
-            line-height: 1.4;
             position: relative;
             animation: fadeIn 0.3s ease-out;
         }
@@ -114,32 +251,94 @@
         }
 
         .user-message {
-            background-color: var(--user-bubble);
             margin-left: auto;
-            border-bottom-right-radius: 5px;
-            color: var(--text-color);
         }
 
         .ai-message {
-            background-color: var(--ai-bubble);
             margin-right: auto;
+        }
+
+        .message-content {
+            padding: 15px 20px;
+            border-radius: 12px;
+            line-height: 1.6;
+            position: relative;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .user-message .message-content {
+            background: var(--primary);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .ai-message .message-content {
+            background: white;
+            border: 1px solid #e2e8f0;
             border-bottom-left-radius: 5px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .message-header img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+
+        .message-header h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .ai-message .message-header h4 {
+            color: var(--primary);
+        }
+
+        .message-text {
+            font-size: 0.95rem;
+        }
+
+        .message-text p {
+            margin-bottom: 10px;
+        }
+
+        .message-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .message-text ul, .message-text ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .message-text li {
+            margin-bottom: 5px;
         }
 
         .typing-indicator {
             display: inline-flex;
-            justify-content: space-between;
-            width: 40px;
-            padding: 15px;
+            padding: 15px 20px;
+            background: white;
+            border-radius: 12px;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
         }
 
         .typing-indicator span {
             width: 8px;
             height: 8px;
-            background-color: var(--primary-color);
+            background: var(--primary);
             border-radius: 50%;
             display: inline-block;
+            margin: 0 2px;
             animation: bounce 1.4s infinite ease-in-out;
         }
 
@@ -157,97 +356,218 @@
         }
 
         .input-area {
+            padding: 15px 25px;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            bottom: 0;
+        }
+
+        .input-container {
             display: flex;
-            padding: 15px;
-            background-color: var(--ai-bubble);
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            background: #f1f5f9;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
         }
 
         #user-input {
             flex: 1;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 25px;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
             outline: none;
-            font-size: 1rem;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-size: 0.95rem;
         }
 
         #send-button {
-            margin-left: 10px;
-            padding: 12px 20px;
-            background-color: var(--primary-color);
+            background: var(--primary);
             color: white;
             border: none;
-            border-radius: 25px;
+            padding: 0 20px;
             cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         #send-button:hover {
-            background-color: var(--secondary-color);
-            transform: scale(1.02);
+            background: var(--primary-dark);
+        }
+
+        #send-button i {
+            font-size: 1.2rem;
         }
 
         .disclaimer {
-            padding: 10px 20px;
-            font-size: 0.8rem;
+            padding: 12px;
+            font-size: 0.75rem;
             text-align: center;
-            color: #666;
-            background-color: rgba(255, 204, 0, 0.1);
-            border-top: 1px solid rgba(255, 204, 0, 0.3);
+            color: var(--gray);
+            background-color: rgba(220, 38, 38, 0.05);
+            border-top: 1px solid rgba(220, 38, 38, 0.1);
         }
 
-        .dark-mode .disclaimer {
-            color: #aaa;
+        /* Health Info Card */
+        .health-info-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
         }
 
-        @media (max-width: 600px) {
-            .container {
-                padding: 10px;
+        .health-info-card h3 {
+            font-size: 1rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: 600;
+        }
+
+        .info-row {
+            display: flex;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .info-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--gray);
+            width: 140px;
+        }
+
+        .info-value {
+            flex: 1;
+        }
+
+        /* Medical Advice Formatting */
+        .medical-advice {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .medical-advice h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .medical-advice ul, .medical-advice ol {
+            margin: 10px 0 10px 20px;
+        }
+
+        .medical-advice li {
+            margin-bottom: 5px;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                z-index: 1000;
             }
-            
-            header h1 {
-                font-size: 2rem;
+
+            .sidebar.open {
+                transform: translateX(0);
             }
-            
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
             .message {
                 max-width: 90%;
             }
-            
-            .input-area {
-                padding: 10px;
+
+            .chat-item .delete-chat-btn {
+                opacity: 1;
             }
-            
-            #user-input,
-            #send-button {
-                padding: 10px 15px;
-            }
+        }
+
+        /* Loading Animation */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .loading {
+            animation: pulse 1.5s infinite;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>MEDSEEK</h1>
-            <p>AI Medical & Health Advisor</p>
-            <button id="mode-toggle" class="mode-toggle">🌙 Dark Mode</button>
-        </header>
-
-        <div class="chat-container">
-            <div class="messages" id="chat-messages">
-                <!-- Messages will be added here dynamically -->
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="https://cdn-icons-png.flaticon.com/512/2777/2777154.png" alt="MEDSEEK Logo">
+                <h2>MEDSEEK</h2>
             </div>
 
-            <form class="input-area" id="chat-form">
-                <input type="text" id="user-input" placeholder="Type your message here..." autocomplete="off">
-                <button type="submit" id="send-button">Send</button>
-            </form>
+            <button class="new-chat-btn" id="new-chat-btn">
+                <i class="fas fa-plus"></i> New Consultation
+            </button>
 
-            <div class="disclaimer">
-                <p>⚠️ Disclaimer: This AI is not a substitute for professional medical advice. Always consult a qualified healthcare provider for serious concerns.</p>
+            <div class="chat-history">
+                <h3>Consultation History</h3>
+                <ul class="chat-list" id="chat-list">
+                    <!-- Chat history items will be added here -->
+                </ul>
+            </div>
+
+            <div class="made-with-love">
+                Made with ❤️ by <a href="mailto:satishchawan1818@gmail.com">Satish</a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="chat-header">
+                <button class="mobile-menu-btn" id="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h2 id="current-chat-title">New Consultation</h2>
+            </div>
+
+            <div class="chat-container">
+                <div class="messages" id="chat-messages">
+                    <!-- Messages will be added here dynamically -->
+                </div>
+
+                <div class="input-area">
+                    <form id="chat-form">
+                        <div class="input-container">
+                            <input type="text" id="user-input" placeholder="Describe your symptoms or health concern..." autocomplete="off">
+                            <button type="submit" id="send-button">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="disclaimer">
+                    ⚠️ Disclaimer: This AI provides general health information only. For medical emergencies, contact your local emergency services immediately.
+                </div>
             </div>
         </div>
     </div>
@@ -255,62 +575,287 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // DOM Elements
-            const chatMessages = document.getElementById('chat-messages');
+            const sidebar = document.getElementById('sidebar');
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const newChatBtn = document.getElementById('new-chat-btn');
             const chatForm = document.getElementById('chat-form');
             const userInput = document.getElementById('user-input');
-            const modeToggle = document.getElementById('mode-toggle');
-            
-            // App State
-            let darkMode = false;
-            const userInfo = {
-                name: '',
-                age: '',
-                gender: '',
-                conditions: '',
-                issue: ''
-            };
-            let infoStep = 0; // 0 = not collecting, 1 = name, 2 = age, etc.
-            let isTyping = false;
+            const chatMessages = document.getElementById('chat-messages');
+            const chatList = document.getElementById('chat-list');
+            const currentChatTitle = document.getElementById('current-chat-title');
 
-            // Initialize chat
-            addAIMessage("Hello! 👋 I'm your AI Health & Medical Assistant. I'm here to help you with your general health concerns. To assist you better, could you please share your:\n1. Name\n2. Age\n3. Gender (optional)\n4. Any previous health conditions\n5. Your current health issue or concern\n\nPlease note: I'm not a doctor, but I can offer guidance based on general medical knowledge.");
-            infoStep = 1; // Start collecting name
+            // App State
+            let chats = JSON.parse(localStorage.getItem('medseek-chats')) || [];
+            let currentChatId = null;
+            let isTyping = false;
+            const API_KEY = "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";
+
+            // Initialize the app
+            initApp();
 
             // Event Listeners
+            mobileMenuBtn.addEventListener('click', toggleSidebar);
+            newChatBtn.addEventListener('click', startNewChat);
             chatForm.addEventListener('submit', handleSubmit);
-            modeToggle.addEventListener('click', toggleDarkMode);
+            userInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    chatForm.dispatchEvent(new Event('submit'));
+                }
+            });
 
             // Functions
-            function toggleDarkMode() {
-                darkMode = !darkMode;
-                document.body.classList.toggle('dark-mode', darkMode);
-                modeToggle.textContent = darkMode ? '☀️ Light Mode' : '🌙 Dark Mode';
+            function initApp() {
+                // Load chat history
+                renderChatList();
+                
+                // If there are existing chats, load the most recent one
+                if (chats.length > 0) {
+                    loadChat(chats[0].id);
+                } else {
+                    // Start a new chat if no chats exist
+                    startNewChat();
+                }
             }
 
-            function handleSubmit(e) {
-                e.preventDefault();
-                const message = userInput.value.trim();
-                if (!message || isTyping) return;
-
-                addUserMessage(message);
-                userInput.value = '';
-                processUserMessage(message);
+            function toggleSidebar() {
+                sidebar.classList.toggle('open');
             }
 
-            function addUserMessage(text) {
+            function startNewChat() {
+                const newChat = {
+                    id: Date.now().toString(),
+                    title: 'New Consultation',
+                    messages: [],
+                    createdAt: new Date().toISOString(),
+                    userInfo: {
+                        name: '',
+                        age: '',
+                        gender: '',
+                        conditions: '',
+                        medications: '',
+                        allergies: '',
+                        issue: '',
+                        symptoms: '',
+                        duration: '',
+                        severity: ''
+                    },
+                    infoStep: 1 // Start with collecting name
+                };
+
+                chats.unshift(newChat);
+                currentChatId = newChat.id;
+                saveChats();
+                renderChatList();
+                loadChat(newChat.id);
+
+                // Add initial AI message with medical introduction
+                addAIMessage(`Hello! 👋 I'm Dr. MEDSEEK, your AI medical advisor. I'll help assess your health concerns with a series of questions.
+
+To provide the best guidance, I'll need some information:
+1. Your name
+2. Age
+3. Gender (optional)
+4. Any existing medical conditions
+5. Current medications
+6. Known allergies
+7. Your current health issue
+8. Specific symptoms
+9. Duration of symptoms
+10. Severity (mild/moderate/severe)
+
+Let's start with your name. What should I call you?`);
+            }
+
+            function loadChat(chatId) {
+                const chat = chats.find(c => c.id === chatId);
+                if (!chat) return;
+
+                currentChatId = chatId;
+                currentChatTitle.textContent = chat.title || 'New Consultation';
+                
+                // Clear current messages
+                chatMessages.innerHTML = '';
+                
+                // Render all messages in this chat
+                chat.messages.forEach(msg => {
+                    if (msg.sender === 'user') {
+                        addUserMessage(msg.text, false);
+                    } else {
+                        addAIMessage(msg.text, false);
+                    }
+                });
+
+                // Highlight active chat in sidebar
+                document.querySelectorAll('.chat-item').forEach(item => {
+                    item.classList.toggle('active', item.dataset.chatId === chatId);
+                });
+
+                // Scroll to bottom
+                setTimeout(() => {
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 100);
+            }
+
+            function renderChatList() {
+                chatList.innerHTML = '';
+                
+                chats.forEach(chat => {
+                    const chatItem = document.createElement('li');
+                    chatItem.className = 'chat-item';
+                    chatItem.dataset.chatId = chat.id;
+                    chatItem.innerHTML = `
+                        <div class="chat-item-content">
+                            <i class="fas fa-comment-medical"></i>
+                            ${chat.title || 'New Consultation'}
+                        </div>
+                        <button class="delete-chat-btn" data-chat-id="${chat.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    `;
+                    
+                    chatItem.addEventListener('click', (e) => {
+                        // Don't load chat if delete button was clicked
+                        if (!e.target.closest('.delete-chat-btn')) {
+                            loadChat(chat.id);
+                        }
+                    });
+                    
+                    // Add delete button event
+                    const deleteBtn = chatItem.querySelector('.delete-chat-btn');
+                    deleteBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        deleteChat(chat.id);
+                    });
+                    
+                    chatList.appendChild(chatItem);
+                });
+            }
+
+            function deleteChat(chatId) {
+                if (confirm('Are you sure you want to delete this consultation?')) {
+                    chats = chats.filter(c => c.id !== chatId);
+                    saveChats();
+                    
+                    // If we deleted the current chat, start a new one
+                    if (currentChatId === chatId) {
+                        if (chats.length > 0) {
+                            loadChat(chats[0].id);
+                        } else {
+                            startNewChat();
+                        }
+                    }
+                    
+                    renderChatList();
+                }
+            }
+
+            function saveChats() {
+                localStorage.setItem('medseek-chats', JSON.stringify(chats));
+            }
+
+            function getCurrentChat() {
+                return chats.find(c => c.id === currentChatId);
+            }
+
+            function updateChatTitle(newTitle) {
+                const chat = getCurrentChat();
+                if (chat && chat.title !== newTitle) {
+                    chat.title = newTitle;
+                    saveChats();
+                    renderChatList();
+                    currentChatTitle.textContent = newTitle;
+                }
+            }
+
+            function addUserMessage(text, saveToHistory = true) {
                 const messageDiv = document.createElement('div');
                 messageDiv.className = 'message user-message';
-                messageDiv.innerHTML = formatMessageText(text);
+                messageDiv.innerHTML = `
+                    <div class="message-content">
+                        <div class="message-text">${formatMessageText(text)}</div>
+                    </div>
+                `;
                 chatMessages.appendChild(messageDiv);
+                
+                if (saveToHistory) {
+                    const chat = getCurrentChat();
+                    if (chat) {
+                        chat.messages.push({
+                            sender: 'user',
+                            text: text,
+                            timestamp: new Date().toISOString()
+                        });
+                        saveChats();
+                    }
+                }
+                
                 scrollToBottom();
             }
 
-            function addAIMessage(text) {
+            function addAIMessage(text, saveToHistory = true) {
                 const messageDiv = document.createElement('div');
                 messageDiv.className = 'message ai-message';
-                messageDiv.innerHTML = formatMessageText(text);
+                messageDiv.innerHTML = `
+                    <div class="message-content">
+                        <div class="message-header">
+                            <img src="https://cdn-icons-png.flaticon.com/512/3309/3309823.png" alt="AI Assistant">
+                            <h4>Dr. MEDSEEK</h4>
+                        </div>
+                        <div class="message-text">${formatMedicalResponse(text)}</div>
+                    </div>
+                `;
                 chatMessages.appendChild(messageDiv);
+                
+                if (saveToHistory) {
+                    const chat = getCurrentChat();
+                    if (chat) {
+                        chat.messages.push({
+                            sender: 'ai',
+                            text: text,
+                            timestamp: new Date().toISOString()
+                        });
+                        
+                        // Update chat title if it's the first AI response
+                        if (chat.title === 'New Consultation' && text.length > 20) {
+                            const newTitle = text.substring(0, 50) + (text.length > 50 ? '...' : '');
+                            updateChatTitle(newTitle);
+                        }
+                        
+                        saveChats();
+                    }
+                }
+                
                 scrollToBottom();
+            }
+
+            function formatMedicalResponse(text) {
+                // Format lists and headings in the AI response
+                let formattedText = text;
+                
+                // Convert markdown-style lists to HTML
+                formattedText = formattedText.replace(/\n\s*-\s*(.*?)(?=\n|$)/g, '\n<li>$1</li>');
+                formattedText = formattedText.replace(/\n\s*\d+\.\s*(.*?)(?=\n|$)/g, '\n<li>$1</li>');
+                
+                // Convert headings
+                formattedText = formattedText.replace(/\n\s*([A-Z][A-Za-z ]+):\s*\n/g, '\n<h4>$1</h4>\n');
+                
+                // Split into paragraphs and format
+                return formattedText.split('\n').map(paragraph => {
+                    if (paragraph.startsWith('<li>')) {
+                        return paragraph;
+                    } else if (paragraph.startsWith('<h4>')) {
+                        return paragraph;
+                    } else if (paragraph.trim() === '') {
+                        return '';
+                    } else {
+                        return `<p>${paragraph}</p>`;
+                    }
+                }).join('');
+            }
+
+            function formatMessageText(text) {
+                return text.split('\n').map(paragraph => `<p>${paragraph}</p>`).join('');
             }
 
             function showTypingIndicator() {
@@ -318,9 +863,21 @@
                 
                 isTyping = true;
                 const typingDiv = document.createElement('div');
-                typingDiv.className = 'message ai-message typing-indicator';
+                typingDiv.className = 'message ai-message';
                 typingDiv.id = 'typing-indicator';
-                typingDiv.innerHTML = '<span></span><span></span><span></span>';
+                typingDiv.innerHTML = `
+                    <div class="message-content">
+                        <div class="message-header">
+                            <img src="https://cdn-icons-png.flaticon.com/512/3309/3309823.png" alt="AI Assistant">
+                            <h4>Dr. MEDSEEK</h4>
+                        </div>
+                        <div class="typing-indicator">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                `;
                 chatMessages.appendChild(typingDiv);
                 scrollToBottom();
             }
@@ -333,22 +890,36 @@
                 }
             }
 
-            function formatMessageText(text) {
-                return text.split('\n').map(paragraph => `<p>${paragraph}</p>`).join('');
-            }
-
             function scrollToBottom() {
-                chatMessages.scrollTop = chatMessages.scrollHeight;
+                setTimeout(() => {
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 100);
             }
 
-            function processUserMessage(message) {
+            async function handleSubmit(e) {
+                e.preventDefault();
+                const message = userInput.value.trim();
+                if (!message || isTyping) return;
+
+                addUserMessage(message);
+                userInput.value = '';
+                
+                const chat = getCurrentChat();
+                if (!chat) return;
+
+                // Process the user message
+                processUserMessage(message, chat);
+            }
+
+            function processUserMessage(message, chat) {
                 // Check for greetings
                 if (['hi', 'hello', 'hey'].includes(message.toLowerCase())) {
                     showTypingIndicator();
                     setTimeout(() => {
                         hideTypingIndicator();
-                        addAIMessage("Hello there! 👋 Let's start with your name. What should I call you?");
-                        infoStep = 1;
+                        addAIMessage("Hello! I'm Dr. MEDSEEK. Let's start with your name for our medical consultation. What should I call you?");
+                        chat.infoStep = 1;
+                        saveChats();
                     }, 1000);
                     return;
                 }
@@ -358,60 +929,87 @@
                     showTypingIndicator();
                     setTimeout(() => {
                         hideTypingIndicator();
-                        addAIMessage("Stay healthy and take care! I'm always here if you need me again.");
+                        addAIMessage("You're welcome! Remember to consult a healthcare professional for serious symptoms. Stay healthy!");
                     }, 1000);
                     return;
                 }
 
                 // Check for creator info
-                if (message.toLowerCase().includes('who created you') || message.toLowerCase().includes('who made you')) {
+                if (message.toLowerCase().includes('who created you') || 
+                    message.toLowerCase().includes('who made you')) {
                     showTypingIndicator();
                     setTimeout(() => {
                         hideTypingIndicator();
-                        addAIMessage("I was created by Satish. If you'd like to contact him personally, you can reach him at:\nMobile: 8660090326\nEmail: satishchawan1818@gmail.com");
+                        addAIMessage("I was developed by Satish as a medical advisory tool. For direct contact: Mobile: 8660090326 | Email: satishchawan1818@gmail.com");
                     }, 1000);
                     return;
                 }
 
                 // Check for personal info requests
-                if (message.toLowerCase().includes('your personal') || message.toLowerCase().includes('about you')) {
+                if (message.toLowerCase().includes('your personal') || 
+                    message.toLowerCase().includes('about you')) {
                     showTypingIndicator();
                     setTimeout(() => {
                         hideTypingIndicator();
-                        addAIMessage("I'm an AI assistant and don't have personal details. If you'd like to contact my creator Satish, you can reach him at:\nMobile: 8660090326\nEmail: satishchawan1818@gmail.com");
+                        addAIMessage("As an AI medical advisor, I don't have personal details. My purpose is to provide general health information. For direct contact with my developer Satish: Mobile: 8660090326 | Email: satishchawan1818@gmail.com");
                     }, 1000);
                     return;
                 }
 
                 // Handle info collection steps
-                if (infoStep > 0) {
-                    let nextStep = infoStep;
+                if (chat.infoStep > 0) {
+                    let nextStep = chat.infoStep;
                     let response = '';
                     
-                    switch(infoStep) {
+                    switch(chat.infoStep) {
                         case 1: // Name
-                            userInfo.name = message;
-                            response = `Nice to meet you,${message} this is an medical ai assistant created by satish  ! How old are you?`;
+                            chat.userInfo.name = message;
+                            response = `Thank you, ${message}. For accurate medical advice, please share your age.`;
                             nextStep = 2;
                             break;
                         case 2: // Age
-                            userInfo.age = message;
-                            response = "Got it. What is your gender? (optional)";
+                            chat.userInfo.age = message;
+                            response = "Understood. What is your gender? (This helps assess certain risk factors, but is optional)";
                             nextStep = 3;
                             break;
                         case 3: // Gender
-                            userInfo.gender = message;
-                            response = "What is your current health issue or concern?";
+                            chat.userInfo.gender = message;
+                            response = "Do you have any existing medical conditions I should know about? (e.g., diabetes, hypertension)";
                             nextStep = 4;
                             break;
                         case 4: // Conditions
-                            userInfo.conditions = message;
-                            response = "Do you have any previous health conditions I should know about?";
+                            chat.userInfo.conditions = message;
+                            response = "Are you currently taking any medications? Please list them if so.";
                             nextStep = 5;
                             break;
-                        case 5: // Issue
-                            userInfo.issue = message;
-                            response = "Thank you for sharing that information. Let me analyze your concern...";
+                        case 5: // Medications
+                            chat.userInfo.medications = message;
+                            response = "Do you have any known allergies? (medications, foods, etc.)";
+                            nextStep = 6;
+                            break;
+                        case 6: // Allergies
+                            chat.userInfo.allergies = message;
+                            response = "What specific health issue brings you here today?";
+                            nextStep = 7;
+                            break;
+                        case 7: // Issue
+                            chat.userInfo.issue = message;
+                            response = "Could you describe your symptoms in detail? (e.g., location, nature, timing)";
+                            nextStep = 8;
+                            break;
+                        case 8: // Symptoms
+                            chat.userInfo.symptoms = message;
+                            response = "How long have you been experiencing these symptoms?";
+                            nextStep = 9;
+                            break;
+                        case 9: // Duration
+                            chat.userInfo.duration = message;
+                            response = "How would you rate the severity? (mild, moderate, severe)";
+                            nextStep = 10;
+                            break;
+                        case 10: // Severity
+                            chat.userInfo.severity = message;
+                            response = "Thank you for providing this information. I'll now analyze your case and provide guidance...";
                             nextStep = 0; // Done collecting info
                             break;
                     }
@@ -420,13 +1018,14 @@
                     setTimeout(() => {
                         hideTypingIndicator();
                         addAIMessage(response);
-                        infoStep = nextStep;
+                        chat.infoStep = nextStep;
+                        saveChats();
                     }, 1000);
 
                     if (nextStep === 0) {
                         // All info collected, send to AI for analysis
                         setTimeout(() => {
-                            getAIResponse(userInfo);
+                            getAIResponse(chat.userInfo, chat);
                         }, 1500);
                     }
 
@@ -434,44 +1033,51 @@
                 }
 
                 // Regular conversation with AI
-                getAIResponse(message);
+                getAIResponse(message, chat);
             }
 
-            async function getAIResponse(prompt) {
+            async function getAIResponse(prompt, chat) {
                 showTypingIndicator();
                 
                 try {
                     let messagesToSend = [];
                     
                     if (typeof prompt === 'string') {
-                        // Regular message
-                        const allMessages = Array.from(chatMessages.querySelectorAll('.message')).map(el => {
-                            return {
-                                role: el.classList.contains('user-message') ? 'user' : 'assistant',
-                                content: el.textContent.trim()
-                            };
-                        });
+                        // Regular message - send last few messages for context
+                        const recentMessages = chat.messages.slice(-6).map(msg => ({
+                            role: msg.sender === 'user' ? 'user' : 'assistant',
+                            content: msg.text
+                        }));
                         
                         messagesToSend = [
-                            ...allMessages,
+                            ...recentMessages,
                             { role: 'user', content: prompt }
                         ];
                     } else {
-                        // Health info collected
-                        const healthPrompt = `User health information:
+                        // Health info collected - create detailed medical prompt
+                        const healthPrompt = `Patient Medical Information:
                         Name: ${prompt.name}
                         Age: ${prompt.age}
                         Gender: ${prompt.gender || 'not specified'}
-                        Previous conditions: ${prompt.conditions || 'none'}
-                        Current issue: ${prompt.issue}
+                        Existing Conditions: ${prompt.conditions || 'none reported'}
+                        Current Medications: ${prompt.medications || 'none reported'}
+                        Known Allergies: ${prompt.allergies || 'none reported'}
+                        Primary Concern: ${prompt.issue}
+                        Symptoms: ${prompt.symptoms}
+                        Duration: ${prompt.duration}
+                        Severity: ${prompt.severity}
+
+                        As a medical professional, provide:
+                        1. DIAGNOSTIC CONSIDERATIONS: Possible conditions that could explain these symptoms
+                        2. RED FLAGS: Warning signs that require immediate medical attention
+                        3. SELF-CARE ADVICE: Appropriate home care measures
+                        4. WHEN TO SEEK CARE: Specific circumstances when professional help is needed
+                        5. FOLLOW-UP: Recommended next steps
                         
-                        Please provide general medical advice for this concern. Remember to:
-                        1. Be professional but empathetic
-                        2. Include a disclaimer that you're not a doctor
-                        3. Suggest seeing a real doctor if symptoms are serious
-                        4. Keep the response clear and concise in a well structured and mannered way
-                        5. If they ask you about tablets and their dosage use the given age data to suggest them the tablets and their dosage  `;
-                        
+                        Format response with clear headings and bullet points.
+                        Maintain professional, empathetic tone.
+                        Include disclaimer that this isn't a substitute for professional diagnosis.`;
+
                         messagesToSend = [
                             { role: 'user', content: healthPrompt }
                         ];
@@ -480,26 +1086,33 @@
                     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
                         method: "POST",
                         headers: {
-                            "Authorization": "Bearer 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",
+                            "Authorization": `Bearer ${API_KEY}`,
                             "HTTP-Referer": "https://medseek-ai.vercel.app",
                             "X-Title": "MEDSEEK AI",
                             "Content-Type": "application/json"
                         },
                         body: JSON.stringify({
                             "model": "deepseek/deepseek-prover-v2:free",
-                            "messages": messagesToSend
+                            "messages": messagesToSend,
+                            "temperature": 0.7,
+                            "max_tokens": 1500
                         })
                     });
 
                     const data = await response.json();
-                    const aiMessage = data.choices[0].message.content;
+                    let aiMessage = data.choices[0].message.content;
+
+                    // Add standard medical disclaimer if not already present
+                    if (!aiMessage.includes('disclaimer') && !aiMessage.includes('not a substitute')) {
+                        aiMessage += "\n\nIMPORTANT: This information is not a substitute for professional medical advice. Always consult a healthcare provider for proper diagnosis and treatment.";
+                    }
 
                     hideTypingIndicator();
                     addAIMessage(aiMessage);
                 } catch (error) {
                     console.error('Error fetching AI response:', error);
                     hideTypingIndicator();
-                    addAIMessage("I'm having trouble connecting right now. Please try again later or consult a healthcare professional if this is urgent.");
+                    addAIMessage("I'm experiencing technical difficulties. For urgent medical concerns, please contact a healthcare professional directly.");
                 }
             }
         });
