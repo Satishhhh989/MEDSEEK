@@ -480,13 +480,13 @@
                     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
                         method: "POST",
                         headers: {
-                            "Authorization": "Bearer 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",
+                            "Authorization": "Bearer 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",
                             "HTTP-Referer": "https://medseek-ai.vercel.app",
                             "X-Title": "MEDSEEK AI",
                             "Content-Type": "application/json"
                         },
                         body: JSON.stringify({
-                            "model": "deepseek/deepseek-r1:free",
+                            "model": "deepseek/deepseek-prover-v2:free",
                             "messages": messagesToSend
                         })
                     });
